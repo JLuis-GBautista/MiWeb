@@ -4,21 +4,34 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "npm i && npm run build && node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "p2p:s1": "set HTTP_PORT=3000 && set P2P_PORT=5000 && npm run dev",
+    "p2p:s2": "set HTTP_PORT=3001 && set P2P_PORT=5001 && set PEERS=ws:localhost:5000 && npm run dev",
+    "p2p:s3": "set HTTP_PORT=3002 && set P2P_PORT=5002 && set PEERS=ws:localhost:5000,ws:localhost:5001 && npm run dev",
     "build": "tsc",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "test:mine": "nodemon src/mineTest.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "elliptic": "^6.6.1",
+    "express": "^4.21.2",
+    "uuid": "^11.0.5",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
+    "@types/elliptic": "^6.4.18",
+    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.12",
+    "@types/ws": "^8.5.14",
     "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
     "ts-jest": "^29.2.5"
   }
 }

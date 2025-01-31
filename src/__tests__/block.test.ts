@@ -1,38 +1,45 @@
 import Block from "../utils/Block";
+import Transaction from "../wallet/transaction";
 
 describe('Block', () => {
     let timestamp: number;
     let previousBlock: Block;
     let hash: string;
-    let data: string;
+    let data: Transaction[];
+    let difficulty: number;
+    let nonce: number;
 
     beforeEach(() => {
         timestamp = new Date(2001, 2, 5).getTime();
         previousBlock = Block.blockGenesis;
-        data = '{"data": "t35t-d4t4"}';
-        hash = Block.hash(timestamp, previousBlock.hash, data);
+        data = [];
+        hash = Block.hash(timestamp, previousBlock.hash, data, 0, 3);
+        difficulty = 3;
+        nonce = 192;
     });
 
     it('comparacion de blocks', () => {
-        const block = new Block(timestamp, previousBlock.hash, hash, data);
+        const block = new Block(timestamp, previousBlock.hash, hash, data, nonce, difficulty);
 
         expect(block.timestamp).toEqual(timestamp);
         expect(block.previousHash).toEqual(previousBlock.hash);
         expect(block.data).toEqual(data);
         expect(block.hash).toEqual(hash);
+        expect(block.nonce).toEqual(nonce);
     });
 
     it('use Block.mine()', () => {
         const block = Block.mine(previousBlock, data);
-
+        expect(block.nonce).not.toEqual(0);
+        expect(block.hash.substring(0, block.difficulty)).toEqual('0'.repeat(block.difficulty));
         expect(block.hash.length).toEqual(64);
         expect(block.previousHash).toEqual(previousBlock.hash);
         expect(block.data).toEqual(data);
     });
 
     it('use Block.hash()', () => {
-        const hash = Block.hash(timestamp, previousBlock.hash, data);
-        const expectHash = '9efe7fc28b251cac95b99866e199b49574412e9bff8e5d97bb8a864e0afede97';
+        const hash = Block.hash(timestamp, previousBlock.hash, data, nonce, difficulty);
+        const expectHash = 'f8ba8e579754c2590c470d3e1a73b4ce41b861843e1e678a9fb10ec504a82775';
 
         expect(hash).toEqual(expectHash);
     });
